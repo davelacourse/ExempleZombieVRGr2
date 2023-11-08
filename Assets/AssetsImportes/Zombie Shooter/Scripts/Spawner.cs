@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;  // ajoute la librairie réseau
 
-public class Spawner : MonoBehaviour
+public class Spawner : NetworkBehaviour  // change la classe hérité
 {
     public float spawnTime = 1;
     public GameObject spawnGameObject;
@@ -14,11 +15,22 @@ public class Spawner : MonoBehaviour
     {
         if(timer > spawnTime)
         {
+            // Si je ne suis pas le serveur je resort du update car seulement le serveur
+            // instancie les zombies et gère le timer
+            if(!IsServer)
+            {
+                return;
+            }
             Transform randomPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            Instantiate(spawnGameObject, randomPoint.position, randomPoint.rotation);
+            GameObject spawnedZombie = Instantiate(spawnGameObject, randomPoint.position, randomPoint.rotation);
+            
+            // Instancie le gameobject sur le réseau
+            spawnedZombie.GetComponent<NetworkObject>().Spawn(true);
+            
             timer = 0;
         }
-
         timer += Time.deltaTime;
     }
 }
+
+

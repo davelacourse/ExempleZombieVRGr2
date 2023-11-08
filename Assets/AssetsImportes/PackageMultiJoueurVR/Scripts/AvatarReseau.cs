@@ -7,6 +7,8 @@ public class AvatarReseau : NetworkBehaviour
 {
     // Attributs qui servent à contenir les positions de mon avatar
     [SerializeField] private Transform _rootAvatar = default;  // XR Origin
+    public Transform RootAvatar => _rootAvatar;
+
     [SerializeField] private Transform _headAvatar = default;  // Main Camera
     [SerializeField] private Transform _leftHandAvatar = default;  // LeftHand
     [SerializeField] private Transform _rightHandAvatar = default;  // RightHand
